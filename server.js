@@ -26,7 +26,10 @@ app.get('/api/quotes', (req, res, next) => {
 app.post('/api/quotes', (req, res, next) => {
     const reqBodyQuote = req.query.quote;
     const reqBodyPerson = req.query.person;
+    const newId = quotes[quotes.length-1].id + 1;
+ 
     const newObject = {
+        id: newId,
         quote: reqBodyQuote,
         person: reqBodyPerson
     }
@@ -37,6 +40,36 @@ app.post('/api/quotes', (req, res, next) => {
     else {
         quotes.push(newObject);
         res.send({quote: newObject});
+    }
+});
+
+app.put('/api/quotes/:id/quote', (req, res, next) => {
+    const paramId = req.params.id;
+    const quote = req.query.quote;
+    const person = req.query.person;
+
+    newObject = {
+        id: paramId,
+        quote: quote,
+        person: person
+    };
+
+    quotes[paramId] = newObject;
+    res.send(quotes[paramId]);
+});
+
+app.delete('/api/quotes/:id', (req, res, next) => {
+    const id = req.params.id;
+ 
+    const index = quotes.indexOf(quotes.find(neededQuote => neededQuote.id === id));
+    console.log(index);
+
+    if(index !== -1){
+        quotes.splice(index, 1);
+        res.status(204).send();
+    }
+    else {
+        res.status(404).send();
     }
 });
 
